@@ -1,19 +1,34 @@
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
+from bert_sklearn import BertClassifier
+from bert_sklearn import load_model
 
 
-def build_svm_model(X_train, y_train):
-    pipeline = Pipeline([
+def build_model(X_train, y_train):
+    model = BertClassifier(max_seq_length=64, train_batch_size=16, random_state=42, use_cuda=True)
+    #model.fit(X_train, y_train)
+    savefile = 'mymodel.bin'
+    #model.save(savefile)
+    model = load_model(savefile)
+    """ model = Pipeline([
         ('tfidf', TfidfVectorizer()),
         ('svm', SVC())
-    ])
+    ])"""
 
-    # Fit the pipeline on the training data
-    pipeline.fit(X_train, y_train)
+    """ model = Pipeline([
+        ('tfidf', TfidfVectorizer()),
+        ('rf', RandomForestClassifier())
+    ])"""
+    """model = Pipeline([
+        ('tfidf', TfidfVectorizer()),
+        ('nb', MultinomialNB())
+    ])"""
 
-    return pipeline
+    return model
 
 
 def predict(model, data_to_predict):
